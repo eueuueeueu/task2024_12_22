@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="../js/config.js"></script>
+</head>
+
+<body class="w-full h-full flex justify-center pt-[20px]">
+  <div class="w-5/6 border-2 select-none pull-refresh relative overflow-hidden">
+    <div class="-translate-y-[100px]">
+      <p class="text-center text-gray-400 text-18 h-100 leading-100"></p>
+      <p class="mx-[15px] py-[10px] border-b-2">I am item 150</p>
+      <p class="mx-[15px] py-[10px] border-b-2">I am item 150</p>
+      <p class="mx-[15px] py-[10px] border-b-2">I am item 150</p>
+      <p class="mx-[15px] py-[10px] border-b-2">I am item 150</p>
+      <p class="mx-[15px] py-[10px] border-b-2">I am item 150</p>
+      <p class="mx-[15px] py-[10px] border-b-2">I am item 150</p>
+      <p class="mx-[15px] py-[10px] border-b-2">I am item 150</p>
+      <p class="mx-[15px] py-[10px] border-b-2">I am item 150</p>
+      <p class="mx-[15px] py-[10px] border-b-2">I am item 150</p>
+      <p class="mx-[15px] py-[10px] border-b-2">I am item 150</p>
+      <p class="mx-[15px] py-[10px] border-b-2">I am item 150</p>
+      <p class="mx-[15px] py-[10px] border-b-2">I am item 150</p>
+      <p class="mx-[15px] py-[10px] border-b-2">I am item 150</p>
+      <p class="mx-[15px] py-[10px] border-b-2">I am item 150</p>
+      <p class="mx-[15px] py-[10px] border-b-2">I am item 150</p>
+      <p class="mx-[15px] py-[10px] border-b-2">I am item 150</p>
+      <p class="mx-[15px] py-[10px] border-b-2">I am item 150</p>
+      <p class="mx-[15px] py-[10px] border-b-2">I am item 150</p>
+    </div>
+  </div>
+</body>
+<script>
+  let clickPosition
+  let refresh = document.querySelector('.pull-refresh')
+  function PullScroll(e) {
+    // refreshPaddingTopValue = (e.y - clickPosition - 20)>100?100: (e.y - clickPosition - 20)
+    if ((e.y - clickPosition - 20) > 100) {
+      refresh.firstElementChild.firstElementChild.innerText = 'Release'
+      refreshPaddingTopValue = (e.y - clickPosition - 20) > 130 ? 130 : (e.y - clickPosition - 20)
+    } else {
+      refresh.firstElementChild.firstElementChild.innerText = 'Pull down'
+      refreshPaddingTopValue = e.y - clickPosition - 20
+    }
+    refresh.style.paddingTop = refreshPaddingTopValue + 'px'
+  }
+  function looseRetrieve(e) {
+    document.removeEventListener('mousemove', PullScroll)
+    refresh.firstElementChild.firstElementChild.innerText = 'Loading...'
+    refresh.style.transition = 'all .5s'
+    refresh.style.paddingTop='70px'
+    refresh.addEventListener('transitionend',()=>{
+      setTimeout(()=>{ 
+        refresh.style.paddingTop = '0px'
+        refresh.firstElementChild.firstElementChild.innerText = 'Refresh succeed'
+      },500)
+    })
+  }
+  refresh.addEventListener('mousedown', (e) => {
+    let paddingTopValue = parseInt(refresh.style.paddingTop.slice(0, -2)) ? parseInt(refresh.style.paddingTop.slice(0, -2)) : 0
+    clickPosition = e.y - refresh.offsetTop - paddingTopValue
+    if (e.target.tagName === 'P') {
+      document.addEventListener('mousemove', PullScroll)
+      document.addEventListener('mouseup', looseRetrieve)
+    }
+  })
+</script>
+
+</html>

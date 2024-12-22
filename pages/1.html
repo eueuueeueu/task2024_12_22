@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="../js/config.js"></script>
+</head>
+
+<body class="w-screen h-screen overflow-hidden">
+  <div class="w-150 h-50 border-2 text-center leading-50 mx-auto my-auto Open-Drawer cursor-pointer select-none">Open
+    Drawer</div>
+  <!-- 黑色遮罩层 -->
+  <div class="w-full h-0 bg-black fixed top-0 left-0 opacity-80 z-0 mask-layer"></div>
+  <!-- 白色背景抽屉 h-400-->
+  <!--  ease-in-out duration-300 -->
+  <div
+    class="ease-in-out duration-300 w-full h-0 overflow-hidden opacity-100 bg-white absolute z-20 bottom-0 rounded-t-xl flex justify-center items-end mask-layer-content">
+    <!-- 抽屉中间内容 -->
+    <div class="w-350 h-full bg-red-400 px-5 flex flex-col items-center py-10">
+      <div class="w-100 h-8 bg-gray-400 rounded-xl cursor-pointer pull select-none"></div>
+      <h1 class="text-black text-30 select-none ">Move Goal</h1>
+      <p>Set your daily activity goal.</p>
+      <div class="flex justify-between items-center mt-5">
+        <span class="w-40 h-40 rounded-full border block text-50 text-center leading-35">-</span>
+        <h1 class="font-bold text-50">390</h1>
+        <span class="w-40 h-40 rounded-full border block text-30 text-center leading-40">+</span>
+      </div>
+      <ul class="w-full h-150 flex justify-between items-end mb-20">
+        <li class="w-20 h-5/6 bg-black block"></li>
+        <li class="w-20 h-4/6 bg-black block"></li>
+        <li class="w-20 h-3/6 bg-black block"></li>
+        <li class="w-20 h-4/6 bg-black block"></li>
+        <li class="w-20 h-3/6 bg-black block"></li>
+        <li class="w-20 h-4/6 bg-black block"></li>
+        <li class="w-20 h-3/6 bg-black block"></li>
+        <li class="w-20 h-4/6 bg-black block"></li>
+        <li class="w-20 h-4/6 bg-black block"></li>
+        <li class="w-20 h-3/6 bg-black block"></li>
+        <li class="w-20 h-4/6 bg-black block"></li>
+        <li class="w-20 h-3/6 bg-black block"></li>
+        <li class="w-20 h-5/6 bg-black block"></li>
+      </ul>
+      <button class="w-full h-45 bg-black text-white rounded-lg">Submit</button>
+    </div>
+  </div>
+</body>
+<script>
+  let OpenDrawer = document.querySelector('.Open-Drawer')
+  let maskLayer = document.querySelector('.mask-layer')
+  let content = document.querySelector('.mask-layer-content')
+  let pull = document.querySelector('.pull')
+  OpenDrawer.addEventListener('click', () => {
+    maskLayer.style.height = '100%'
+    content.style.height = 400 + 'px'
+    content.style.bottom = '0'
+    window.addEventListener('click', (e) => {
+      if ((e.target.classList)[(e.target.classList).length - 1] === 'mask-layer') {
+        content.style.transition = 'all .3s'
+        content.style.bottom = '-100%'
+        document.addEventListener('transitionend', setHeight)
+      }
+    })
+  })
+  let firstValueY = 0
+  let firstValueHeight = 0
+  let flag = true
+  function move(e) {
+    if (flag) {
+      firstValueY = e.y
+      flag = false
+      firstValueHeight = parseInt((content.style.height).slice(0, -2))
+    }
+    // console.log(firstValueY / e.y);
+    // content.style.height = `${firstValueHeight + (firstValueY - e.y)}px`
+    content.style.transition = 'all 0s'
+    content.style.bottom = `${(firstValueY - e.y) > 0 ? 0 : (firstValueY - e.y)}px`
+    console.log(Math.abs((content.style.bottom).slice(0, -2)) / firstValueHeight);
+    let opacityValue = (0.8 - Math.abs((content.style.bottom).slice(0, -2)) / firstValueHeight) < 0.4 ? 0.4 : (0.7 - Math.abs((content.style.bottom).slice(0, -2)) / firstValueHeight)
+    maskLayer.style.opacity = opacityValue
+  }
+  function setHeight() {
+    maskLayer.style.height = '0'
+    document.removeEventListener('transitionend', setHeight)
+  }
+  pull.addEventListener('mousedown', () => {
+    window.addEventListener('mousemove', move)
+    window.addEventListener('mouseup', () => {
+      window.removeEventListener('mousemove', move)
+      if (parseInt(-(content.style.bottom).slice(0, -2)) > firstValueHeight / 2) {
+        content.style.transition = 'all .3s'
+        content.style.bottom = '-100%'
+        document.addEventListener('transitionend', setHeight)
+      }
+    })
+  })
+</script>
+
+</html>
